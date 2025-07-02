@@ -1,0 +1,1624 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Design It, Pitch It!</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Animated background particles */
+        .bg-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .particle {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .particle:nth-child(1) { width: 80px; height: 80px; left: 10%; animation-delay: 0s; }
+        .particle:nth-child(2) { width: 60px; height: 60px; left: 20%; animation-delay: 1s; }
+        .particle:nth-child(3) { width: 100px; height: 100px; left: 35%; animation-delay: 2s; }
+        .particle:nth-child(4) { width: 40px; height: 40px; left: 50%; animation-delay: 3s; }
+        .particle:nth-child(5) { width: 70px; height: 70px; left: 70%; animation-delay: 4s; }
+        .particle:nth-child(6) { width: 90px; height: 90px; left: 85%; animation-delay: 5s; }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); opacity: 0.7; }
+            50% { transform: translateY(-100px) rotate(180deg); opacity: 1; }
+        }
+
+        .header {
+            position: relative;
+            z-index: 1;
+            text-align: center;
+            padding: 4rem 2rem;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .header h1 {
+            font-size: clamp(2.5rem, 6vw, 4.5rem);
+            font-weight: 800;
+            background: linear-gradient(135deg, #ffffff 0%, #f0f9ff 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 1rem;
+            animation: slideInDown 1s ease-out;
+        }
+
+        .header p {
+            font-size: 1.3rem;
+            color: rgba(255, 255, 255, 0.9);
+            max-width: 800px;
+            margin: 0 auto;
+            animation: fadeInUp 1s ease-out 0.3s both;
+        }
+
+        .container {
+            position: relative;
+            z-index: 1;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 3rem 2rem;
+        }
+
+        .section {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 24px;
+            margin-bottom: 3rem;
+            overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            animation: fadeInUp 0.8s ease-out;
+        }
+
+        .section:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.2);
+            border-color: rgba(255, 255, 255, 0.3);
+        }
+
+        .section-header {
+            padding: 3rem;
+            position: relative;
+        }
+
+        .section-number {
+            position: absolute;
+            top: -10px;
+            left: 30px;
+            background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+            color: white;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            font-weight: 700;
+            box-shadow: 0 10px 30px rgba(34, 197, 94, 0.3);
+        }
+
+        .section-title {
+            color: white;
+            font-size: 2.2rem;
+            font-weight: 700;
+            margin: 1rem 0 1.5rem 0;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .section-description {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 1.2rem;
+            line-height: 1.7;
+            margin-bottom: 2rem;
+        }
+
+        .modern-button {
+            background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+            color: white;
+            border: none;
+            padding: 1.2rem 2.5rem;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            display: inline-flex;
+            align-items: center;
+            gap: 0.8rem;
+            box-shadow: 0 10px 30px rgba(34, 197, 94, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .modern-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .modern-button:hover::before {
+            left: 100%;
+        }
+
+        .modern-button:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 15px 40px rgba(34, 197, 94, 0.4);
+        }
+
+        .modern-button:active {
+            transform: translateY(-1px) scale(1.02);
+        }
+
+        .button-icon {
+            font-size: 1.3rem;
+            transition: transform 0.3s ease;
+        }
+
+        .slides-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            backdrop-filter: blur(20px);
+            z-index: 1000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .slides-container.active {
+            display: flex;
+            animation: slideIn 0.5s ease-out;
+        }
+
+        .slides-wrapper {
+            width: 90%;
+            max-width: 1200px;
+            height: 85%;
+            background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+            border-radius: 20px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
+        }
+
+        /* Fixed slide styles for proper vertical scrolling */
+        .slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            opacity: 0;
+            transform: translateX(100px);
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            overflow: hidden;
+        }
+
+        .slide.active {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .slide-header {
+            flex-shrink: 0;
+            background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+            padding: 2rem 3rem 1rem 3rem;
+            border-bottom: 2px solid rgba(34, 197, 94, 0.3);
+            z-index: 10;
+        }
+
+        .slide-scroll-content {
+    flex: 1;
+    padding: 1.5rem 2rem 2rem 2rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    overflow: hidden;
+    height: calc(100% - 120px); /* Account for header height */
+}
+
+        .slide h2 {
+            color: white;
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 2rem;
+            background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .slide-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+            flex: 1;
+            align-items: start;
+        }
+
+        .slide-text {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 1.1rem;
+            line-height: 1.8;
+        }
+
+        .slide-text h3 {
+    color: #22c55e;
+    font-size: 1.3rem;
+    margin: 1rem 0 0.5rem 0;
+}
+
+.slide-text ul {
+    margin: 0.5rem 0;
+    padding-left: 1.2rem;
+}
+
+.slide-text li {
+    margin-bottom: 0.3rem;
+    font-size: 0.95rem;
+}
+
+.slide-text p {
+    margin-bottom: 0.8rem;
+    font-size: 1rem;
+}
+
+        .slide-image {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 300px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .slide-image img {
+            width: 100%;
+            height: 200px; /* Fixed height to create square-like format */
+            object-fit: cover;
+            border-radius: 12px; /* Increased border radius for more square appearance */
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            transition: transform 0.3s ease;
+            aspect-ratio: 1/1; /* Force square aspect ratio */
+        }
+
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+
+        .comparison-card {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    padding: 1.5rem;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    height: fit-content;
+}
+
+.comparison-card img {
+    width: 100%;
+    height: 200px; /* Make it square */
+    object-fit: cover;
+    border-radius: 12px;
+    margin-bottom: 1rem;
+    aspect-ratio: 1/1; /* Force square aspect ratio */
+}
+
+.comparison-card ul {
+    font-size: 0.9rem;
+}
+
+.comparison-card li {
+    margin-bottom: 0.4rem;
+}
+
+        .comparison-card.good {
+            border-color: #22c55e;
+            background: rgba(34, 197, 94, 0.1);
+        }
+
+        .comparison-card.bad {
+            border-color: #ef4444;
+            background: rgba(239, 68, 68, 0.1);
+        }
+
+        .timeline-visual {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 3rem 0;
+            position: relative;
+        }
+
+        .timeline-step {
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid #22c55e;
+            border-radius: 20px;
+            padding: 2rem;
+            text-align: center;
+            flex: 1;
+            margin: 0 1rem;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .timeline-step:hover {
+            transform: translateY(-10px);
+            background: rgba(34, 197, 94, 0.2);
+        }
+
+        .timeline-step::after {
+            content: '→';
+            position: absolute;
+            right: -2rem;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 2rem;
+            color: #22c55e;
+            font-weight: bold;
+        }
+
+        .timeline-step:last-child::after {
+            display: none;
+        }
+
+        .timeline-step h4 {
+            color: #22c55e;
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+        }
+
+        .timeline-step p {
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .controls {
+            position: absolute;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .control-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            padding: 0.8rem 1.5rem;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .control-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 2rem;
+            right: 2rem;
+            background: rgba(239, 68, 68, 0.8);
+            border: none;
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.5rem;
+            transition: all 0.3s ease;
+            z-index: 1001;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .close-btn:hover {
+            background: rgba(239, 68, 68, 1);
+            transform: rotate(90deg) scale(1.1);
+            box-shadow: 0 5px 15px rgba(239, 68, 68, 0.4);
+        }
+
+        .close-btn:active {
+            transform: rotate(90deg) scale(0.95);
+        }
+
+        .slide-indicator {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 0.9rem;
+        }
+
+        .ai-tools-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .ai-tool-card {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    padding: 1rem;
+    transition: transform 0.3s ease;
+    height: fit-content;
+}
+
+.ai-tool-card img {
+    width: 100%;
+    height: 150px; /* Square format for smaller cards */
+    object-fit: cover;
+    border-radius: 8px;
+    margin-bottom: 0.5rem;
+    aspect-ratio: 1/1; /* Force square aspect ratio */
+}
+
+.ai-tool-card h4 {
+    font-size: 1.1rem;
+    margin-bottom: 0.5rem;
+}
+
+.ai-tool-card p {
+    font-size: 0.9rem;
+    margin-bottom: 0.5rem;
+}
+
+.ai-tool-card ul {
+    font-size: 0.85rem;
+}
+
+.ai-tool-card li {
+    margin-bottom: 0.2rem;
+}
+
+        .ai-tool-card:hover {
+            transform: translateY(-5px);
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .ai-tool-card h4 {
+            color: #22c55e;
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+        }
+
+        @keyframes slideInDown {
+            from {
+                transform: translateY(-50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                transform: translateY(30px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .slide-content {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+            
+            .timeline-visual {
+                flex-direction: column;
+                gap: 2rem;
+            }
+            
+            .timeline-step::after {
+                content: '↓';
+                right: 50%;
+                top: 100%;
+                transform: translateX(50%);
+            }
+            
+            .slide {
+                padding: 2rem;
+            }
+            
+            .controls {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+        }
+
+        /* Fixed slide styles for proper vertical scrolling */
+        .slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            opacity: 0;
+            transform: translateX(100px);
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            overflow: hidden;
+        }
+
+        .slide.active {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .slide-header {
+            flex-shrink: 0;
+            background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+            padding: 2rem 3rem 1rem 3rem;
+            border-bottom: 2px solid rgba(34, 197, 94, 0.3);
+            z-index: 10;
+        }
+
+        .framework-steps {
+            margin: 1rem 0;
+        }
+
+        .step-item {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 1rem;
+    border-radius: 8px;
+    margin-bottom: 0.5rem;
+    border-left: 3px solid #22c55e;
+}
+
+.step-item h4 {
+    color: #22c55e;
+    margin-bottom: 0.3rem;
+    font-size: 1.1rem;
+}
+
+.step-item p {
+    font-size: 0.9rem;
+    margin: 0;
+}
+
+        .detailed-examples {
+            margin-top: 3rem;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .example-analysis {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 2rem;
+            border-radius: 16px;
+            margin: 1rem 0;
+        }
+
+        .example-analysis img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 12px;
+            margin: 1rem 0;
+        }
+
+/* Additional styles for slide content */
+.slide-content-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+    height: 100%;
+    align-items: start;
+    overflow: hidden;
+}
+
+.slide-images {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.slide-images img {
+    width: 100%;
+    height: 195px;
+    object-fit: cover;
+    border-radius: 8px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    transition: transform 0.3s ease;
+}
+
+.slide-images img:hover {
+    transform: scale(1.05);
+}
+
+.framework-steps {
+    margin: 1rem 0;
+}
+
+.extra-content {
+    margin-top: 3rem;
+    padding-top: 2rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.extra-content h4 {
+    color: #22c55e;
+    margin: 1.5rem 0 1rem 0;
+        margin: 1rem 0 0.5rem 0;
+}
+
+/* Ensure proper spacing for long content */
+.slide-text {
+    color: rgba(255, 255, 255, 0.9);
+    font-size: 1.1rem;
+    line-height: 1.8;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .slide-content-grid {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+    }
+    
+    .slide-header {
+        padding: 1.5rem 2rem 1rem 2rem;
+    }
+    
+    .slide-scroll-content {
+        padding: 1.5rem 2rem 4rem 2rem;
+    }
+}
+    </style>
+</head>
+<body>
+    <div class="bg-animation">
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+    </div>
+
+    <div class="header">
+        <h1>Design It, Pitch It!</h1>
+        <p>Interactive Resource for Presentation Skills - International College Portsmouth</p>
+    </div>
+
+    <div class="container">
+        <!-- Section 1: What Makes a Good Presentation? -->
+        <div class="section">
+            <div class="section-number">1</div>
+            <div class="section-header">
+                <h2 class="section-title">What Makes a Good Presentation?</h2>
+                <p class="section-description">Master the art of compelling presentations with expert tips, real examples, and interactive comparisons between effective and ineffective slide designs.</p>
+                <button class="modern-button" onclick="openSlides('presentation-slides')">
+                    <span class="button-icon">🎯</span>
+                    Explore Presentation Mastery
+                </button>
+            </div>
+        </div>
+
+        <!-- Section 3: Build Your Visual Story -->
+        <div class="section">
+            <div class="section-number">2</div>
+            <div class="section-header">
+                <h2 class="section-title">Build Your Visual Story</h2>
+                <p class="section-description">Transform your ideas into compelling visual narratives using our comprehensive timeline approach: from initial sketches to stunning final renders.</p>
+                <button class="modern-button" onclick="openSlides('story-slides')">
+                    <span class="button-icon">🎨</span>
+                    Start Visual Journey
+                </button>
+            </div>
+        </div>
+
+        <!-- Section 5: Ethical AI Use -->
+        <div class="section">
+            <div class="section-number">3</div>
+            <div class="section-header">
+                <h2 class="section-title">Ethical AI Use</h2>
+                <p class="section-description">Navigate the responsible use of AI tools in academic and professional work with proper attribution, best practices, and ethical guidelines.</p>
+                <button class="modern-button" onclick="openSlides('ai-slides')">
+                    <span class="button-icon">🤖</span>
+                    Learn AI Ethics
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Enhanced Slides Container for Presentation -->
+    <div class="slides-container" id="presentation-slides">
+        <div class="slides-wrapper">
+            <button class="close-btn" onclick="closeSlides()">&times;</button>
+        
+            <!-- Slide 1: Presentation Fundamentals -->
+            <div class="slide active">
+                <div class="slide-header">
+                    <h2>Presentation Fundamentals</h2>
+                </div>
+                <div class="slide-scroll-content">
+                    <div class="slide-content-grid">
+                        <div class="slide-text">
+                            <h3>The Foundation of Great Presentations</h3>
+                            <p>Every memorable presentation starts with understanding your audience and crafting a clear, compelling message. The best presentations don't just inform—they inspire, persuade, and create lasting impact.</p>
+                        
+                            <h3>Key Success Factors</h3>
+                            <ul>
+                                <li><strong>Clear Objective:</strong> Know exactly what you want to achieve</li>
+                                <li><strong>Audience Focus:</strong> Tailor content to your listeners' needs</li>
+                                <li><strong>Strong Structure:</strong> Logical flow from start to finish</li>
+                                <li><strong>Engaging Delivery:</strong> Connect emotionally with your audience</li>
+                                <li><strong>Visual Impact:</strong> Use compelling visuals to support your message</li>
+                                <li><strong>Call to Action:</strong> End with clear next steps</li>
+                            </ul>
+
+                            <h3>The Psychology of Presentations</h3>
+                            <p>Research shows that audiences remember:</p>
+                            <ul>
+                                <li>10% of what they hear</li>
+                                <li>20% of what they read</li>
+                                <li>80% of what they see and do</li>
+                            </ul>
+                            
+                            <h3>Presentation Planning Framework</h3>
+                            <div class="framework-steps">
+                                <div class="step-item">
+                                    <h4>1. Define Your Purpose</h4>
+                                    <p>What specific outcome do you want to achieve? Be clear about your goals.</p>
+                                </div>
+                                <div class="step-item">
+                                    <h4>2. Know Your Audience</h4>
+                                    <p>Research their background, interests, and what they need to hear.</p>
+                                </div>
+                                <div class="step-item">
+                                    <h4>3. Structure Your Content</h4>
+                                    <p>Organize information in a logical, easy-to-follow sequence.</p>
+                                </div>
+                                <div class="step-item">
+                                    <h4>4. Design for Impact</h4>
+                                    <p>Create visuals that support and enhance your message.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="slide-images">
+                            <img src="https://images.unsplash.com/photo-1557804506-669a67965ba0?w=500&h=300&fit=crop" alt="Professional presentation" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Slide 2: Good vs Bad Design Examples -->
+            <div class="slide">
+                <div class="slide-header">
+                    <h2>Good vs Bad Design Examples</h2>
+                </div>
+                <div class="slide-scroll-content">
+                    <div class="slide-content-grid">
+                    <div class="comparison-card good">
+                            <h3>✅ Effective Design Examples</h3>
+                            <img src="https://images.unsplash.com/photo-1558403194-611308249627?w=600&h=400&fit=crop" alt="Clean presentation design" />
+                            <ul>
+                                <li>Clean, uncluttered layout</li>
+                                <li>Consistent typography</li>
+                                <li>High contrast colors</li>
+                                <li>Strategic use of visuals</li>
+                                <li>One main idea per slide</li>
+                            </ul>
+                        </div>
+                    
+                        <div class="comparison-card bad">
+                            <h3>❌ Poor Design Examples</h3>
+                            <img src="https://images.unsplash.com/photo-1586282391129-76a6df230234?w=600&h=400&fit=crop" alt="Cluttered presentation" />
+                            <ul>
+                                <li>Overcrowded slides</li>
+                                <li>Inconsistent fonts</li>
+                                <li>Poor color contrast</li>
+                                <li>No clear visual hierarchy</li>
+                                <li>Multiple competing messages</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Slide 3: Typography & Color Theory -->
+            <div class="slide">
+                <div class="slide-header">
+                    <h2>Typography & Color Theory</h2>
+                </div>
+                <div class="slide-scroll-content">
+                    <div class="slide-content-grid">
+                        <div class="slide-text">
+                            <h3>Typography Best Practices</h3>
+                            <p>Typography is the foundation of readable, professional presentations. Good type choices enhance comprehension and credibility.</p>
+                        
+                            <h3>Font Selection Guidelines</h3>
+                            <ul>
+                                <li><strong>Sans-serif for screens:</strong> Arial, Helvetica, Calibri work best for digital presentations</li>
+                                <li><strong>Serif for print:</strong> Times New Roman, Georgia for handouts and reports</li>
+                                <li><strong>Limit font families:</strong> Maximum 2-3 fonts per presentation</li>
+                                <li><strong>Hierarchy matters:</strong> Use size, weight, and color to create clear levels</li>
+                            </br>
+                            </ul>
+
+                            <!-- <h3>Color Psychology in Presentations</h3> -->
+                            <div class="framework-steps">
+                                <div class="step-item">
+                                    <h4>Blue - Trust & Professionalism</h4>
+                                    <p>Ideal for business presentations, corporate communications</p>
+                                </div>
+                                <div class="step-item">
+                                    <h4>Green - Growth & Sustainability</h4>
+                                    <p>Perfect for environmental topics, success stories</p>
+                                </div>
+                                <div class="step-item">
+                                    <h4>Red - Urgency & Action</h4>
+                                    <p>Use sparingly for calls-to-action and warnings</p>
+                                </div>
+                            </div>
+
+                            <h3>Accessibility Considerations</h3>
+                            <ul>
+                                <li>Minimum 4.5:1 contrast ratio for text</li>
+                                <li>Use color plus other indicators (bold, underline)</li>
+                                <li>Test with colorblind simulation tools</li>
+                            </ul>
+                        </div>
+                        <div class="slide-images">
+                            <img src="https://images.unsplash.com/photo-1561070791-2526d30994b5?w=500&h=300&fit=crop" alt="Typography examples" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Slide 4: Presentation Delivery Techniques -->
+            <div class="slide">
+                <div class="slide-header">
+                    <h2>Presentation Delivery Techniques</h2>
+                </div>
+                <div class="slide-scroll-content">
+                    <div class="slide-content-grid">
+                        <div class="slide-text">
+                            <h3>Mastering Your Delivery</h3>
+                            <p>Great content needs great delivery. Your presentation style can make or break audience engagement.</p>
+                        
+                            <h3>Voice & Pacing Techniques</h3>
+                            <ul>
+                                <li><strong>Vary your pace:</strong> Slow down for important points, speed up for familiar concepts</li>
+                                <li><strong>Use strategic pauses:</strong> Give audience time to process key information</li>
+                                <li><strong>Project confidence:</strong> Speak clearly and at appropriate volume</li>
+                                <li><strong>Avoid filler words:</strong> Practice eliminating "um," "uh," and "like"</li>
+                            </br>
+                            </ul>
+
+                            <!-- <h3>Body Language & Stage Presence</h3> -->
+                            <div class="framework-steps">
+                                <div class="step-item">
+                                    <h4>Eye Contact</h4>
+                                    <p>Connect with different sections of your audience throughout the presentation</p>
+                                </div>
+                                <div class="step-item">
+                                    <h4>Gestures</h4>
+                                    <p>Use natural hand movements to emphasize points and maintain engagement</p>
+                                </div>
+                                <div class="step-item">
+                                    <h4>Movement</h4>
+                                    <p>Move purposefully around the space to create dynamic energy</p>
+                                </div>
+                            </div>
+
+                            <h3>Handling Q&A Sessions</h3>
+                            <ul>
+                                <li>Repeat questions for the entire audience</li>
+                                <li>Admit when you don't know something</li>
+                                <li>Bridge back to your key messages</li>
+                                <li>Set clear time boundaries</li>
+                            </ul>
+                        </div>
+                        <div class="slide-images">
+                            <img src="https://images.unsplash.com/photo-1475721027785-f74eccf877e2?w=500&h=300&fit=crop" alt="Presentation delivery" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Slide 5: Technology & Interactive Elements -->
+            <div class="slide">
+                <div class="slide-header">
+                    <h2>Technology & Interactive Elements</h2>
+                </div>
+                <div class="slide-scroll-content">
+                    <div class="slide-content-grid">
+                        <div class="slide-text">
+                            <h3>Leveraging Technology Effectively</h3>
+                            <p>Modern presentations can benefit from interactive elements and technology, but they should enhance, not distract from your message.</p>
+                        
+                            <h3>Interactive Presentation Tools</h3>
+                            <ul>
+                                <li><strong>Live Polling:</strong> Engage audience with real-time questions (Mentimeter, Poll Everywhere)</li>
+                                <li><strong>Q&A Platforms:</strong> Collect questions throughout presentation (Slido, Kahoot)</li>
+                                <li><strong>Collaborative Whiteboards:</strong> Real-time brainstorming (Miro, Jamboard)</li>
+                                <li><strong>Multimedia Integration:</strong> Videos, audio, and animations when appropriate</li>
+                            </br>
+                            </ul>
+
+                            <!-- <h3>Technical Preparation Checklist</h3> -->
+                            <div class="framework-steps">
+                                <div class="step-item">
+                                    <h4>Equipment Testing</h4>
+                                    <p>Test all technology 30 minutes before presentation starts</p>
+                                </div>
+                                <div class="step-item">
+                                    <h4>Backup Plans</h4>
+                                    <p>Have offline versions and alternative delivery methods ready</p>
+                                </div>
+                                <div class="step-item">
+                                    <h4>Internet Connectivity</h4>
+                                    <p>Test wifi, have mobile hotspot as backup for online tools</p>
+                                </div>
+                            </div>
+
+                            <h3>Virtual Presentation Best Practices</h3>
+                            <ul>
+                                <li>Ensure proper lighting and camera positioning</li>
+                                <li>Use a quality microphone for clear audio</li>
+                                <li>Engage audience with polls and breakout rooms</li>
+                                <li>Share screen efficiently and highlight cursor</li>
+                                <li>Record sessions for later reference</li>
+                            </ul>
+                        </div>
+                        <div class="slide-images">
+                            <img src="https://images.unsplash.com/photo-1531482615713-2afd69097998?w=500&h=300&fit=crop" alt="Interactive presentation technology" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="controls">
+                <button class="control-btn" onclick="previousSlide('presentation-slides')">← Previous</button>
+                <span class="slide-indicator">
+                    <span id="presentation-current">1</span> / <span id="presentation-total">5</span>
+                </span>
+                <button class="control-btn" onclick="nextSlide('presentation-slides')">Next →</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Enhanced Slides Container for Visual Story -->
+    <div class="slides-container" id="story-slides">
+        <div class="slides-wrapper">
+            <button class="close-btn" onclick="closeSlides()">&times;</button>
+        
+            <!-- Slide 1: Visual Storytelling Process -->
+            <div class="slide active">
+                <div class="slide-header">
+                    <h2>Visual Storytelling Process</h2>
+                </div>
+                <div class="slide-scroll-content">
+                    <div class="slide-content-grid">
+                        <div class="slide-text">
+                            <h3>The Power of Visual Storytelling</h3>
+                            <p>Visual storytelling combines compelling imagery with narrative structure to create memorable presentations that resonate with your audience on both intellectual and emotional levels.</p>
+            
+                <h3>Key Elements of Visual Storytelling</h3>
+                <ul>
+                    <li><strong>Narrative Arc:</strong> Beginning, middle, and end structure</li>
+                    <li><strong>Emotional Connection:</strong> Imagery that evokes feeling</li>
+                    <li><strong>Visual Consistency:</strong> Cohesive style throughout</li>
+                    <li><strong>Purposeful Design:</strong> Every visual element serves the story</li>
+                    <li><strong>Audience Journey:</strong> Guide viewers through a clear path</li>
+                </ul>
+
+                <h3>The Visual Storytelling Framework</h3>
+                <div class="framework-steps">
+                    <div class="step-item">
+                        <h4>1. Define Your Core Message</h4>
+                        <p>Identify the single most important idea you want to communicate.</p>
+                    </div>
+                    <div class="step-item">
+                        <h4>2. Know Your Characters</h4>
+                        <p>Who are the key players in your story? What motivates them?</p>
+                    </div>
+                    <div class="step-item">
+                        <h4>3. Establish Setting & Context</h4>
+                        <p>Create the world where your story takes place.</p>
+                    </div>
+                    <div class="step-item">
+                        <h4>4. Build Tension & Resolution</h4>
+                        <p>Create a problem that needs solving, then resolve it.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="slide-images">
+                <img src="https://images.unsplash.com/photo-1499750310107-5fef28a66643?w=500&h=300&fit=crop" alt="Visual storytelling" />
+            </div>
+        </div>
+    </div>
+</div>
+
+            <!-- Slide 2: Sketching Techniques -->
+            <div class="slide">
+                <div class="slide-header">
+                    <h2>Sketching & Ideation Techniques</h2>
+                </div>
+                <div class="slide-scroll-content">
+                    <div class="slide-content-grid">
+                        <div class="slide-text">
+                            <h3>The Power of Hand Sketching</h3>
+                            <p>Before diving digital tools, start with pen and paper. Sketching allows for rapid iteration and helps you think through problems without technical constraints.</p>
+                        
+                            <h3>Essential Sketching Techniques</h3>
+                            <div class="technique-grid">
+                                <div class="technique-item">
+                                    <h4>✏️ Thumbnail Sketches</h4>
+                                    <p>Quick, small drawings (2-3 inches) to explore multiple layout options rapidly</p>
+                                    <ul>
+                                        <li>Focus on composition, not details</li>
+                                        <li>Create 10-20 variations quickly</li>
+                                        <li>Use simple shapes and lines</li>
+                                        <li></li>
+                                    </ul>
+                                </div>
+                                <div class="technique-item">
+                                    <h4>📐 Wireframes</h4>
+                                    <p>Basic layout structures showing content hierarchy without visual styling</p>
+                                    <ul>
+                                        <li>Define content blocks and relationships</li>
+                                        <li>Establish navigation patterns</li>
+                                        <li>Plan user flow and interactions</li>
+                                    </ul>
+                                </div>
+                                <div class="technique-item">
+                                    <h4>🎬 Storyboards</h4>
+                                    <p>Sequential frames showing user journey or presentation flow</p>
+                                    <ul>
+                                        <li>Map out key moments and transitions</li>
+                                        <li>Identify potential pain points</li>
+                                        <li>Plan timing and pacing</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="slide-images">
+                            <img src="https://www.jenreviews.com/wp-content/uploads/2017/07/draw-2303845_640.jpg" alt="Hand sketching" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Slide 3: Digital Design Tools -->
+            <div class="slide">
+                <div class="slide-header">
+                    <h2>Digital Design Tools & Workflows</h2>
+                </div>
+                <div class="slide-scroll-content">
+                    <div class="slide-content-grid">
+                    <div class="ai-tool-card">
+                                    <img src="https://images.unsplash.com/photo-1581291518633-83b4ebd1d83e?w=200&h=150&fit=crop" alt="Figma interface" />
+                                    <h4>Figma</h4>
+                                    <p>UI/UX design, collaboration</p>
+                                    <ul>
+                                        <li>Real-time collaboration</li>
+                                        <li>Component libraries</li>
+                                        <li>Prototyping capabilities</li>
+                                    </ul>
+                                </div>
+                                <div class="ai-tool-card">
+                                    <img src="https://images.unsplash.com/photo-1581291518857-4e27b48ff24e?w=200&h=150&fit=crop" alt="Adobe Creative Suite" />
+                                    <h4>Adobe Creative Suite</h4>
+                                    <p>Professional graphics, print design</p>
+                                    <ul>
+                                        <li>Industry standard tools</li>
+                                        <li>Advanced features</li>
+                                        <li>Extensive tutorials</li>
+                                    </ul>
+                                </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Slide 4: Visual Hierarchy & Composition -->
+            <div class="slide">
+                <div class="slide-header">
+                    <h2>Visual Hierarchy & Composition</h2>
+                </div>
+                <div class="slide-scroll-content">
+                    <div class="slide-content-grid">
+                        <div class="slide-text">
+                            <h3>Principles of Visual Hierarchy</h3>
+                            <div class="hierarchy-principles">
+                                <div class="principle-item">
+                                    <h4>📏 Size & Scale</h4>
+                                    <p>Larger elements naturally draw attention first. Use size to establish importance.</p>
+                                </div>
+                            
+                                <div class="principle-item">
+                                    <h4>🎨 Color & Contrast</h4>
+                                    <p>High contrast elements stand out, while similar colors recede into the background.</p>
+                                </div>
+                            
+                                <div class="principle-item">
+                                    <h4>📍 Position & Alignment</h4>
+                                    <p>Elements positioned at the top or center typically receive more attention.</p>
+                                 </br> 
+                                </div>
+                            </div>
+
+                            <!-- <h3>Composition Techniques</h3> -->
+                            <ul>
+                                <li></li>
+                                <li><strong>Rule of Thirds:</strong> Place important elements along grid lines</li>
+                                <li><strong>Golden Ratio:</strong> Use 1.618:1 proportions for pleasing layouts</li>
+                                <li><strong>White Space:</strong> Give elements room to breathe</li>
+                                <li><strong>Repetition:</strong> Create consistency through repeated elements</li>
+                            </ul>
+                        </div>
+                        <div class="slide-images">
+                            <img src="https://images.unsplash.com/photo-1572044162444-ad60f128bdea?w=500&h=300&fit=crop" alt="Visual hierarchy example" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Slide 5: Final Rendering & Export -->
+            <div class="slide">
+                <div class="slide-header">
+                    <h2>Final Rendering & Export Best Practices</h2>
+                </div>
+                <div class="slide-scroll-content">
+                    <div class="slide-content-grid">
+                        <div class="slide-text">
+                            <h3>Preparing for Final Output</h3>
+                            <div class="export-checklist">
+                                <h4>✅ Pre-Export Checklist</h4>
+                                <ul>
+                                    <li>Spell check all text content</li>
+                                    <li>Verify all images are high resolution (300 DPI for print)</li>
+                                    <li>Check color consistency across all slides</li>
+                                    <li>Test readability on different screen sizes</li>
+                                </ul>
+                            </div>
+
+                            <h3>Export Formats & Use Cases</h3>
+                            <div class="format-grid">
+                                <div class="format-item">
+                                    <h4>📄 PDF</h4>
+                                    <p>Handouts, email sharing, printing</p>
+                                    <ul>
+                                        <li>Universal compatibility</li>
+                                        <li>Preserves formatting</li>
+                                    </ul>
+                                </div>
+                                <div class="format-item">
+                                    <h4>🖼️ PNG/JPG</h4>
+                                    <p>Social media, web use, thumbnails</p>
+                                    <ul>
+                                        <li>Web-optimized</li>
+                                        <li>Easy to share</li>
+                                    </ul>
+                                </div>
+                                <div class="format-item">
+                                    <h4>🎥 Video</h4>
+                                    <p>Animated presentations, social sharing</p>
+                                    <ul>
+                                        <li>Includes animations</li>
+                                        <li>Auto-playing capability</li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                            <h3>Quality Assurance Tips</h3>
+                            <ul>
+                                <li><strong>Test on Multiple Devices:</strong> Check how your presentation looks on different screens</li>
+                                <li><strong>Backup Everything:</strong> Save multiple versions and keep source files</li>
+                                <li><strong>Get Feedback:</strong> Have others review before final presentation</li>
+                                <li><strong>Practice Run:</strong> Test all interactive elements and transitions</li>
+                            </ul>
+                        </div>
+                        <div class="slide-images">
+                            <img src="https://images.unsplash.com/photo-1542744173-8e7e53415bb0?w=500&h=300&fit=crop" alt="Final presentation" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="controls">
+                <button class="control-btn" onclick="previousSlide('story-slides')">← Previous</button>
+                <span class="slide-indicator">
+                    <span id="story-current">1</span> / <span id="story-total">5</span>
+                </span>
+                <button class="control-btn" onclick="nextSlide('story-slides')">Next →</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Enhanced Slides Container for AI Ethics -->
+    <div class="slides-container" id="ai-slides">
+        <div class="slides-wrapper">
+            <button class="close-btn" onclick="closeSlides()">&times;</button>
+        
+            <!-- Slide 1: AI Ethics Introduction -->
+            <div class="slide active">
+                <div class="slide-header">
+                    <h2>AI Ethics & Academic Integrity</h2>
+                </div>
+                <div class="slide-scroll-content">
+                    <div class="slide-content-grid">
+                        <div class="slide-text">
+                            <h3>The Importance of Ethical AI Use</h3>
+                            <p>As AI tools become increasingly powerful and accessible, it's crucial to use them responsibly in academic and professional contexts. Proper attribution and ethical practices ensure integrity and transparency.</p>
+                        
+                            <h3>Core Ethical Principles</h3>
+                            <div class="principles-grid">
+                                <div class="principle-card">
+                                    <h4>🔍 Transparency</h4>
+                                    <p>Always disclose when and how AI tools were used in your work</p>
+                                </div>
+                                <div class="principle-card">
+                                    <h4>📝 Attribution</h4>
+                                    <p>Properly cite AI tools with version numbers and dates</p>
+                                </div>
+                                <div class="principle-card">
+                                    <h4>✅ Verification</h4>
+                                    <p>Fact-check and validate all AI-generated content</p>
+                                </div>
+                            </div>
+
+                            <h3>Why Ethics Matter</h3>
+                            <ul>
+                                <li><strong>Academic Integrity:</strong> Maintains trust in educational institutions</li>
+                                <li><strong>Professional Standards:</strong> Builds credibility in your field</li>
+                                <li><strong>Legal Compliance:</strong> Avoids copyright and plagiarism issues</li>
+                            </ul>
+                        </div>
+                        <div class="slide-images">
+                            <img src="https://images.unsplash.com/photo-1620712943543-bcc4688e7485?w=500&h=300&fit=crop" alt="AI ethics concept" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Slide 2: Popular AI Tools & Proper Citation -->
+            <div class="slide">
+                <div class="slide-header">
+                    <h2>Popular AI Tools & Proper Citation</h2>
+                </div>
+                <div class="slide-scroll-content">
+                    <div class="slide-content-grid">
+                    <div class="ai-tool-card">
+                                    <img src="data:image/jpeg;base64,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" alt="ChatGPT interface" />
+                                    <h4>ChatGPT</h4>
+                                    <p>Writing assistance, brainstorming, code generation</p>
+                                    <ul>
+                                        <li>Always review and edit outputs</li>
+                                        <li>Verify factual claims</li>
+                                    </ul>
+                                </div>
+                            
+                                <div class="ai-tool-card">
+                                    <img src="data:image/jpeg;base64,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" alt="Claude interface" />
+                                    <h4>Claude (Anthropic)</h4>
+                                    <p>Analysis, research assistance, content creation</p>
+                                    <ul>
+                                        <li>Excellent for analytical tasks</li>
+                                        <li>Always cite specific version used</li>
+                                    </ul>
+                                </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Slide 3: Academic Guidelines & Policies -->
+            <div class="slide">
+                <div class="slide-header">
+                    <h2>Academic Guidelines & Institutional Policies</h2>
+                </div>
+                <div class="slide-scroll-content">
+                    <div class="slide-content-grid">
+                        <div class="slide-text">
+                            <h3>Understanding Your Institution's AI Policy</h3>
+                            <div class="policy-framework">
+                                <div class="policy-level">
+                                    <h4>🏛️ Institutional Level</h4>
+                                    <ul>
+                                        <li>Check your university's official AI use policy</li>
+                                        <li>Review academic integrity guidelines</li>
+                                        <li>Understand consequences of policy violations</li>
+                                    </ul>
+                                </div>
+                            
+                                <div class="policy-level">
+                                    <h4>📚 Department Level</h4>
+                                    <ul>
+                                        <li>Different departments may have specific rules</li>
+                                        <li>STEM vs. Humanities may have different standards</li>
+                                        <li>Check with department advisors</li>
+                                         </br>
+                                          </br>
+                                    </ul>
+                                </div>
+                            
+                                <div class="policy-level">
+                                    <h4>👨‍🏫 Course Level</h4>
+                                    <ul>
+                                        <li>Read syllabus AI use policies carefully</li>
+                                        <li>Ask professors about specific assignments</li>
+                                        <li>Clarify what level of AI assistance is acceptable</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="slide-images">
+                            <img src="https://images.unsplash.com/photo-1606761568499-6d2451b23c66?w=500&h=300&fit=crop" alt="Academic guidelines" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Slide 4: Best Practices & Documentation -->
+            <div class="slide">
+                <div class="slide-header">
+                    <h2>Best Practices & Documentation</h2>
+                </div>
+                <div class="slide-scroll-content">
+                    <div class="slide-content-grid">
+                        <div class="slide-text">
+                            <h3>Documentation Strategies</h3>
+                            <div class="documentation-methods">
+                                <div class="method-item">
+                                    <h4>📋 Process Log</h4>
+                                    <p>Keep a detailed record of your AI interactions:</p>
+                                    <ul>
+                                        <li>Date and time of AI use</li>
+                                        <li>Specific tool and version used</li>
+                                        <li>Exact prompts or queries submitted</li>
+                                    </ul>
+                                </div>
+                            
+                                <div class="method-item">
+                                    <h4>📸 Screenshot Evidence</h4>
+                                    <p>Visual documentation of your AI interactions:</p>
+                                    <ul>
+                                        <li>Screenshots of prompts and responses</li>
+                                        <li>Version information and timestamps</li>
+                                    </ul>
+                                </div>
+                            
+                                <div class="method-item">
+                                    <h4>📝 Reflection Notes</h4>
+                                    <p>Document your thought process:</p>
+                                    <ul>
+                                        <li>Why you chose to use AI for this task</li>
+                                        <li>How AI output influenced your work</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="slide-images">
+                            <img src="https://images.unsplash.com/photo-1517842645767-c639042777db?w=500&h=300&fit=crop" alt="Documentation process" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Slide 5: Future of AI in Education -->
+            <div class="slide">
+                <div class="slide-header">
+                    <h2>Future of AI in Education & Professional Development</h2>
+                </div>
+                <div class="slide-scroll-content">
+                    <div class="slide-content-grid">
+                        <div class="slide-text">
+                            <h3>Emerging Trends in AI Education</h3>
+                            <div class="trends-grid">
+                                <div class="trend-item">
+                                    <h4>🎓 Personalized Learning</h4>
+                                    <p>AI tutors adapting to individual learning styles and pace</p>
+                                    <ul>
+                                        <li>Customized curriculum paths</li>
+                                        <li>Real-time difficulty adjustment</li>
+                                    </ul>
+                                </div>
+                            
+                                <div class="trend-item">
+                                    <h4>🔍 Automated Assessment</h4>
+                                    <p>AI-powered grading and feedback systems</p>
+                                    <ul>
+                                        <li>Instant feedback on assignments</li>
+                                        <li>Plagiarism and AI detection tools</li>
+                                         </br>
+                                          </br>
+                                    </ul>
+                                </div>
+                            
+                                <div class="trend-item">
+                                    <h4>🤝 Collaborative AI</h4>
+                                    <p>AI as a learning partner rather than replacement</p>
+                                    <ul>
+                                        <li>Socratic questioning methods</li>
+                                        <li>Research assistance and fact-checking</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="slide-images">
+                            <img src="https://images.unsplash.com/photo-1581092918056-0c4c3acd3789?w=500&h=300&fit=crop" alt="Future of AI in education" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="controls">
+                <button class="control-btn" onclick="previousSlide('ai-slides')">← Previous</button>
+                <span class="slide-indicator">
+                    <span id="ai-current">1</span> / <span id="ai-total">5</span>
+                </span>
+                <button class="control-btn" onclick="nextSlide('ai-slides')">Next →</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer" style="text-align: center; padding: 3rem 2rem; color: rgba(255,255,255,0.8); position: relative; z-index: 1;">
+        <p>© 2025 International College Portsmouth - Powered by Student Innovation</p>
+    </div>
+
+    <script>
+        let currentSlides = {
+            'presentation-slides': 0,
+            'story-slides': 0,
+            'ai-slides': 0
+        };
+
+        const totalSlides = {
+            'presentation-slides': 5,
+            'story-slides': 5,
+            'ai-slides': 5
+        };
+
+        function openSlides(containerId) {
+            const container = document.getElementById(containerId);
+            container.classList.add('active');
+            document.body.style.overflow = 'hidden';
+            updateSlideIndicator(containerId);
+        }
+
+        function closeSlides() {
+            document.querySelectorAll('.slides-container').forEach(container => {
+                container.classList.remove('active');
+            });
+            document.body.style.overflow = 'auto';
+            
+            // Reset all slides to first slide when closing
+            Object.keys(currentSlides).forEach(key => {
+                currentSlides[key] = 0;
+                const container = document.getElementById(key);
+                if (container) {
+                    const slides = container.querySelectorAll('.slide');
+                    slides.forEach((slide, index) => {
+                        slide.classList.toggle('active', index === 0);
+                    });
+                }
+            });
+        }
+
+        function nextSlide(containerId) {
+            const container = document.getElementById(containerId);
+            const slides = container.querySelectorAll('.slide');
+            
+            slides[currentSlides[containerId]].classList.remove('active');
+            currentSlides[containerId] = (currentSlides[containerId] + 1) % totalSlides[containerId];
+            slides[currentSlides[containerId]].classList.add('active');
+            
+            updateSlideIndicator(containerId);
+        }
+
+        function previousSlide(containerId) {
+            const container = document.getElementById(containerId);
+            const slides = container.querySelectorAll('.slide');
+            
+            slides[currentSlides[containerId]].classList.remove('active');
+            currentSlides[containerId] = currentSlides[containerId] === 0 ? totalSlides[containerId] - 1 : currentSlides[containerId] - 1;
+            slides[currentSlides[containerId]].classList.add('active');
+            
+            updateSlideIndicator(containerId);
+        }
+
+        function updateSlideIndicator(containerId) {
+            const prefix = containerId.split('-')[0];
+            const currentElement = document.getElementById(prefix + '-current');
+            const totalElement = document.getElementById(prefix + '-total');
+            
+            if (currentElement && totalElement) {
+                currentElement.textContent = currentSlides[containerId] + 1;
+                totalElement.textContent = totalSlides[containerId];
+            }
+        }
+
+        // Keyboard navigation
+        document.addEventListener('keydown', function(e) {
+            const activeContainer = document.querySelector('.slides-container.active');
+            if (activeContainer) {
+                const containerId = activeContainer.id;
+                if (e.key === 'ArrowRight') {
+                    nextSlide(containerId);
+                } else if (e.key === 'ArrowLeft') {
+                    previousSlide(containerId);
+                } else if (e.key === 'Escape') {
+                    closeSlides();
+                }
+            }
+        });
+
+        // Close slides when clicking outside
+        document.querySelectorAll('.slides-container').forEach(container => {
+            container.addEventListener('click', function(e) {
+                if (e.target === container) {
+                    closeSlides();
+                }
+            });
+        });
+
+        // Animate sections on
+</script>
+</body>
+</html>
